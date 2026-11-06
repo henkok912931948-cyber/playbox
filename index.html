@@ -4,39 +4,66 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#111827">
-<title>PLAYBOX 2.0</title>
+<meta name="theme-color" content="#101323">
+<title>PLAYBOX - Play & Discover</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#111827;color:white;font-family:Arial,sans-serif}
-header{text-align:center;padding:25px 12px;background:#1f2937}
-h1{color:#a78bfa;font-size:34px;margin:5px}
-header p{color:#cbd5e1}
-select,button{padding:12px;border:0;border-radius:12px;font-size:15px}
-select{background:#374151;color:white}
+body{margin:0;background:#101323;color:#f8fafc;font-family:Arial,sans-serif;padding-bottom:85px}
+header{padding:25px 18px;background:linear-gradient(135deg,#242044,#17223d);text-align:center;border-bottom:1px solid #34314f}
+.logo{font-size:32px;font-weight:900;color:#c4a5ff;letter-spacing:1px}
+header p{color:#cbd5e1;margin:8px 0 15px}
+select{background:#30344b;color:white;border:1px solid #454a66;padding:11px 16px;border-radius:12px;font-size:15px}
 main{max-width:650px;margin:auto;padding:15px}
-.card{background:#1f2937;padding:20px;border-radius:18px;margin:16px 0}
-h2{color:#c4b5fd;margin-top:0}
-button{background:#8b5cf6;color:white;font-weight:bold;margin:4px;cursor:pointer}
-button:disabled{opacity:.5}
+.page{display:none;animation:appear .25s ease}
+.page.active{display:block}
+@keyframes appear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.welcome{background:linear-gradient(135deg,#7046c9,#3b347b);padding:22px;border-radius:22px;margin:15px 0}
+.welcome h2{margin:0 0 8px;font-size:24px}
+.welcome p{color:#eee;margin:0}
+.scorebox{display:flex;justify-content:space-between;align-items:center;background:#20263a;padding:18px;border-radius:18px;margin:15px 0}
+.scorebox strong{color:#ffd166;font-size:27px}
+.card{background:#20263a;border:1px solid #303750;padding:20px;border-radius:20px;margin:15px 0}
+.card h2{margin:0 0 15px;color:#c4a5ff;font-size:21px}
+.card p{line-height:1.5}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{background:#252d46;border:1px solid #39435f;border-radius:18px;padding:18px 10px;text-align:center;cursor:pointer;transition:.2s}
+.tile:active{transform:scale(.96)}
+.tile .emoji{font-size:35px;display:block;margin-bottom:9px}
+.tile strong{font-size:15px}
+.tile small{display:block;color:#aeb8d0;margin-top:6px}
+button{border:0;border-radius:13px;padding:13px 17px;background:#8757e8;color:white;font-weight:bold;font-size:15px;cursor:pointer;margin:4px 0}
+button:disabled{opacity:.5;cursor:not-allowed}
 button:active{transform:scale(.97)}
-.option{display:block;width:100%;text-align:left;background:#374151;margin:9px 0}
+.option{display:block;width:100%;text-align:left;background:#303950;margin:9px 0;padding:15px}
 .option:disabled{opacity:1}
-.score{text-align:center;color:#fbbf24;font-size:22px;padding:15px}
-.result{color:#86efac;min-height:25px;font-weight:bold}
-.ad{border:1px dashed #64748b;padding:20px;text-align:center;color:#9ca3af;border-radius:12px;margin:18px 0}
+.primary{width:100%;background:linear-gradient(90deg,#8757e8,#6555d9)}
+.secondary{background:#303950}
+.result{color:#86efac;min-height:24px;font-weight:bold}
+.muted{color:#aeb8d0;font-size:13px}
+.ad{border:1px dashed #59617c;border-radius:15px;padding:17px;text-align:center;color:#929db6;margin:17px 0;font-size:13px;background:#171d30}
+.ad span{display:block;font-size:20px;margin-bottom:6px}
+.progress{height:9px;background:#39435c;border-radius:20px;overflow:hidden;margin:12px 0}
+.progress div{height:100%;background:linear-gradient(90deg,#a78bfa,#ec91cf);width:0;transition:.3s}
 .memory{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.memory button{font-size:27px;padding:15px 2px;min-height:65px;background:#374151}
-.memory button.open{background:#6d28d9}
-.small{color:#9ca3af;font-size:13px}
-footer{text-align:center;color:#9ca3af;padding:25px}
+.memory button{font-size:27px;padding:12px 2px;min-height:65px;background:#303950}
+.memory button.open{background:#754cc5}
+.achievement{display:flex;align-items:center;gap:13px;background:#293149;border-radius:14px;padding:14px;margin:10px 0}
+.achievement .emoji{font-size:29px}
+.achievement small{display:block;color:#aeb8d0;margin-top:4px}
+.achievement.locked{opacity:.45}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#191e31;border-top:1px solid #343c57;display:flex;justify-content:space-around;padding:9px 3px max(9px,env(safe-area-inset-bottom));z-index:10}
+.nav button{background:transparent;color:#9ca9c5;flex:1;padding:8px 2px;margin:0;font-size:12px}
+.nav button.active{color:#c4a5ff}
+.nav .navicon{display:block;font-size:22px;margin-bottom:4px}
+footer{text-align:center;color:#68748d;padding:25px;font-size:12px}
+h3{font-size:17px}
 </style>
 </head>
 <body>
 
 <header>
-<h1>🎁 PLAYBOX</h1>
-<p id="subtitle">Graj, zdobywaj punkty i odkrywaj świat!</p>
+<div class="logo">🎁 PLAYBOX</div>
+<p id="tagline">Twoje centrum rozrywki</p>
 <select id="language" onchange="changeLanguage()">
 <option value="pl">🇵🇱 Polski</option>
 <option value="de">🇩🇪 Deutsch</option>
@@ -45,155 +72,161 @@ footer{text-align:center;color:#9ca3af;padding:25px}
 </header>
 
 <main>
-<div class="score">
-<span id="scoreLabel">Twoje punkty:</span>
-<strong id="score">0</strong> ⭐
+
+<section class="page active" id="home">
+<div class="welcome">
+<h2 id="welcomeTitle">Witaj w PLAYBOX! 👋</h2>
+<p id="welcomeText">Graj, odkrywaj i zdobywaj punkty każdego dnia.</p>
 </div>
 
-<section class="card">
+<div class="scorebox">
+<div><span id="pointsLabel">Twoje punkty</span><br><strong id="score">0 ⭐</strong></div>
+<div style="text-align:right"><span id="levelLabel">Poziom</span><br><strong id="level">1</strong></div>
+</div>
+
+<div class="card">
 <h2 id="bonusTitle">🎁 Bonus dzienny</h2>
 <p id="bonusText">Odbierz swoje codzienne punkty!</p>
-<button id="bonusButton" onclick="dailyBonus()">Odbierz +20 ⭐</button>
-</section>
+<button class="primary" id="bonusButton" onclick="dailyBonus()">Odbierz +20 ⭐</button>
+</div>
 
-<section class="card">
-<h2 id="challengeTitle">📅 Codzienne wyzwanie</h2>
-<p id="challengeText">Odpowiedz poprawnie na jedno pytanie dnia!</p>
+<div class="card">
+<h2 id="challengeTitle">📅 Wyzwanie dnia</h2>
+<p id="challengeText">Odpowiedz poprawnie na pytanie dnia.</p>
 <p id="challengeQuestion"></p>
 <div id="challengeAnswers"></div>
 <p class="result" id="challengeResult"></p>
-</section>
-
-<div class="ad">
-📢 Miejsce na reklamę
-<br>Reklamy zostaną podłączone po przygotowaniu aplikacji.
 </div>
 
-<section class="card">
+<h2 id="gamesHeading">🎮 Odkrywaj gry</h2>
+<div class="grid">
+<div class="tile" onclick="showPage('games')"><span class="emoji">🧠</span><strong id="tileQuiz">Quiz</strong><small id="tileQuizDesc">Sprawdź wiedzę</small></div>
+<div class="tile" onclick="showPage('games')"><span class="emoji">🧩</span><strong id="tileMemory">Pamięć</strong><small id="tileMemoryDesc">Trenuj umysł</small></div>
+<div class="tile" onclick="showPage('games')"><span class="emoji">⚡</span><strong id="tileReflex">Refleks</strong><small id="tileReflexDesc">Sprawdź szybkość</small></div>
+<div class="tile" onclick="showPage('achievements')"><span class="emoji">🏆</span><strong id="tileAwards">Nagrody</strong><small id="tileAwardsDesc">Zdobądź osiągnięcia</small></div>
+</div>
+
+<div class="ad">
+<span>📢</span>
+<strong id="adTitle">Miejsce na reklamę</strong>
+<p id="adText">Reklamy zostaną podłączone po zatwierdzeniu serwisu.</p>
+</div>
+</section>
+
+<section class="page" id="games">
+<div class="card">
 <h2 id="quizTitle">🧠 Quiz wiedzy</h2>
 <p id="question"></p>
 <div id="answers"></div>
 <p class="result" id="result"></p>
-<button onclick="nextQuestion()" id="next">Następne pytanie</button>
-</section>
+<button class="primary" onclick="nextQuestion()" id="next">Następne pytanie</button>
+<p class="muted" id="questionNumber"></p>
+</div>
 
-<section class="card">
+<div class="card">
 <h2 id="memoryTitle">🧩 Gra pamięciowa</h2>
-<p id="memoryDescription">Znajdź wszystkie pary takich samych symboli.</p>
+<p id="memoryDescription">Znajdź wszystkie pary symboli.</p>
 <div class="memory" id="memoryBoard"></div>
-<p id="memoryStatus" class="result"></p>
-<button onclick="startMemory()" id="memoryStart">Nowa gra</button>
-</section>
+<p class="result" id="memoryStatus"></p>
+<button class="secondary" onclick="startMemory()" id="memoryStart">Nowa gra</button>
+</div>
 
-<section class="card">
-<h2 id="gameTitle">⚡ Test refleksu</h2>
-<p id="gameDescription">Kliknij szybko, gdy pojawi się sygnał!</p>
+<div class="card">
+<h2 id="reflexTitle">⚡ Test refleksu</h2>
+<p id="reflexDescription">Kliknij, gdy pojawi się sygnał!</p>
 <p id="gameStatus">Naciśnij START.</p>
 <button onclick="startGame()" id="start">START</button>
 <button onclick="hit()" id="hit" disabled>⚡ KLIKNIJ!</button>
-</section>
-
-<section class="card">
-<h2 id="rankTitle">🏆 Twoje najlepsze wyniki</h2>
-<ol id="ranking"></ol>
-<button onclick="clearRanking()" id="clearRank">Wyczyść ranking</button>
-<p class="small" id="rankInfo">Ranking zapisany na tym urządzeniu.</p>
-</section>
+</div>
 
 <div class="ad">
-📢 Miejsce na reklamę
-<br>Reklamy zostaną podłączone w kolejnym etapie.
+<span>📢</span>
+<strong>Miejsce na reklamę</strong>
 </div>
+</section>
+
+<section class="page" id="achievements">
+<div class="card">
+<h2 id="awardsTitle">🏆 Twoje osiągnięcia</h2>
+<div id="achievementsList"></div>
+</div>
+<div class="card">
+<h2 id="rankTitle">🥇 Ranking lokalny</h2>
+<ol id="ranking"></ol>
+<button class="secondary" onclick="clearRanking()" id="clearRank">Wyczyść ranking</button>
+<p class="muted" id="rankInfo">Wyniki zapisane na tym urządzeniu.</p>
+</div>
+</section>
+
+<section class="page" id="settings">
+<div class="card">
+<h2 id="settingsTitle">⚙️ Ustawienia</h2>
+<p id="languageLabel">Język aplikacji</p>
+<select onchange="document.getElementById('language').value=this.value;changeLanguage()" id="language2">
+<option value="pl">🇵🇱 Polski</option>
+<option value="de">🇩🇪 Deutsch</option>
+<option value="en">🇬🇧 English</option>
+</select>
+</div>
+<div class="card">
+<h2 id="aboutTitle">ℹ️ O aplikacji</h2>
+<p>PLAYBOX 3.0</p>
+<p class="muted">Play • Learn • Discover</p>
+</div>
+<div class="ad"><span>📢</span><strong>Miejsce na reklamę</strong></div>
+</section>
+
+<footer>PLAYBOX © 2026 · Play · Learn · Discover</footer>
 </main>
 
-<footer>PLAYBOX © 2026 · Graj · Ucz się · Odkrywaj</footer>
+<nav class="nav">
+<button class="active" onclick="showPage('home',this)"><span class="navicon">🏠</span><span id="navHome">Start</span></button>
+<button onclick="showPage('games',this)"><span class="navicon">🎮</span><span id="navGames">Gry</span></button>
+<button onclick="showPage('achievements',this)"><span class="navicon">🏆</span><span id="navAwards">Nagrody</span></button>
+<button onclick="showPage('settings',this)"><span class="navicon">⚙️</span><span id="navSettings">Ustawienia</span></button>
+</nav>
 
 <script>
-const T={
+const words={
 pl:{
-subtitle:"Graj, zdobywaj punkty i odkrywaj świat!",
-score:"Twoje punkty:",bonus:"🎁 Bonus dzienny",
-bonusText:"Odbierz swoje codzienne punkty!",
-bonusDone:"Bonus już odebrany! Wróć jutro.",
-challenge:"📅 Codzienne wyzwanie",
-challengeText:"Odpowiedz poprawnie na jedno pytanie dnia!",
+tagline:"Twoje centrum rozrywki",welcomeTitle:"Witaj w PLAYBOX! 👋",
+welcomeText:"Graj, odkrywaj i zdobywaj punkty każdego dnia.",
+pointsLabel:"Twoje punkty",levelLabel:"Poziom",
+bonusTitle:"🎁 Bonus dzienny",bonusText:"Odbierz swoje codzienne punkty!",
+bonusDone:"Bonus już odebrany. Wróć jutro.",
+challengeTitle:"📅 Wyzwanie dnia",challengeText:"Odpowiedz poprawnie na pytanie dnia.",
 challengeDone:"Wyzwanie wykonane! Wróć jutro.",
-quiz:"🧠 Quiz wiedzy",next:"Następne pytanie",
-correct:"Brawo! +10 punktów ⭐",wrong:"Niestety, spróbuj ponownie!",
-memory:"🧩 Gra pamięciowa",
-memoryDesc:"Znajdź wszystkie pary takich samych symboli.",
-memoryStart:"Nowa gra",memoryWin:"Gratulacje! +20 punktów ⭐",
-memoryStatus:"Znalezione pary:",
-game:"⚡ Test refleksu",
-gameDesc:"Kliknij szybko, gdy pojawi się sygnał!",
-gameStatus:"Naciśnij START.",start:"START",
-hit:"⚡ KLIKNIJ!",wait:"Czekaj na sygnał...",
-ready:"TERAZ! KLIKNIJ!",
+gamesHeading:"🎮 Odkrywaj gry",tileQuiz:"Quiz",tileQuizDesc:"Sprawdź wiedzę",
+tileMemory:"Pamięć",tileMemoryDesc:"Trenuj umysł",
+tileReflex:"Refleks",tileReflexDesc:"Sprawdź szybkość",
+tileAwards:"Nagrody",tileAwardsDesc:"Zdobądź osiągnięcia",
+adTitle:"Miejsce na reklamę",adText:"Reklamy zostaną podłączone po zatwierdzeniu serwisu.",
+quizTitle:"🧠 Quiz wiedzy",next:"Następne pytanie",
+correct:"Brawo! +10 punktów ⭐",wrong:"Niestety, spróbuj następnym razem.",
+questionNumber:"Pytanie",memoryTitle:"🧩 Gra pamięciowa",
+memoryDescription:"Znajdź wszystkie pary symboli.",
+memoryStart:"Nowa gra",memoryStatus:"Znalezione pary:",
+memoryWin:"Gratulacje! +20 punktów ⭐",
+reflexTitle:"⚡ Test refleksu",reflexDescription:"Kliknij, gdy pojawi się sygnał!",
+gameStatus:"Naciśnij START.",start:"START",hit:"⚡ KLIKNIJ!",
+wait:"Czekaj na sygnał...",ready:"TERAZ! KLIKNIJ!",
 early:"Za wcześnie! Spróbuj ponownie.",
-time:"Twój czas: ",
-points:" ms! +5 punktów ⭐",
-rank:"🏆 Twoje najlepsze wyniki",
-clear:"Wyczyść ranking",
-rankInfo:"Ranking zapisany na tym urządzeniu.",
-cleared:"Ranking wyczyszczony."
-},
-de:{
-subtitle:"Spiele, sammle Punkte und entdecke die Welt!",
-score:"Deine Punkte:",bonus:"🎁 Tagesbonus",
-bonusText:"Hole dir deine täglichen Punkte!",
-bonusDone:"Bonus bereits abgeholt! Komm morgen wieder.",
-challenge:"📅 Tagesaufgabe",
-challengeText:"Beantworte die heutige Frage richtig!",
-challengeDone:"Aufgabe erledigt! Komm morgen wieder.",
-quiz:"🧠 Wissensquiz",next:"Nächste Frage",
-correct:"Super! +10 Punkte ⭐",wrong:"Leider falsch! Versuche es erneut!",
-memory:"🧩 Gedächtnisspiel",
-memoryDesc:"Finde alle Paare mit gleichen Symbolen.",
-memoryStart:"Neues Spiel",memoryWin:"Glückwunsch! +20 Punkte ⭐",
-memoryStatus:"Gefundene Paare:",
-game:"⚡ Reaktionstest",
-gameDesc:"Klicke schnell, wenn das Signal erscheint!",
-gameStatus:"Drücke START.",start:"START",
-hit:"⚡ KLICK!",wait:"Warte auf das Signal...",
-ready:"JETZT! KLICK!",
-early:"Zu früh! Versuche es erneut.",
-time:"Deine Zeit: ",
-points:" ms! +5 Punkte ⭐",
-rank:"🏆 Deine besten Ergebnisse",
-clear:"Rangliste löschen",
-rankInfo:"Rangliste auf diesem Gerät gespeichert.",
-cleared:"Rangliste gelöscht."
-},
-en:{
-subtitle:"Play, earn points and discover the world!",
-score:"Your points:",bonus:"🎁 Daily bonus",
-bonusText:"Collect your daily points!",
-bonusDone:"Bonus already collected! Come back tomorrow.",
-challenge:"📅 Daily challenge",
-challengeText:"Answer today's question correctly!",
-challengeDone:"Challenge completed! Come back tomorrow.",
-quiz:"🧠 Knowledge quiz",next:"Next question",
-correct:"Well done! +10 points ⭐",wrong:"Not quite! Try again!",
-memory:"🧩 Memory game",
-memoryDesc:"Find all matching symbol pairs.",
-memoryStart:"New game",memoryWin:"Congratulations! +20 points ⭐",
-memoryStatus:"Pairs found:",
-game:"⚡ Reaction test",
-gameDesc:"Click quickly when the signal appears!",
-gameStatus:"Press START.",start:"START",
-hit:"⚡ CLICK!",wait:"Wait for the signal...",
-ready:"NOW! CLICK!",
-early:"Too early! Try again.",
-time:"Your time: ",
-points:" ms! +5 points ⭐",
-rank:"🏆 Your best scores",
-clear:"Clear ranking",
-rankInfo:"Ranking saved on this device.",
-cleared:"Ranking cleared."
-}};
-
-const Q={
-pl:[
+time:"Twój czas: ",ms:" ms! +5 punktów ⭐",
+awardsTitle:"🏆 Twoje osiągnięcia",rankTitle:"🥇 Ranking lokalny",
+clearRank:"Wyczyść ranking",rankInfo:"Wyniki zapisane na tym urządzeniu.",
+settingsTitle:"⚙️ Ustawienia",languageLabel:"Język aplikacji",
+aboutTitle:"ℹ️ O aplikacji",navHome:"Start",navGames:"Gry",
+navAwards:"Nagrody",navSettings:"Ustawienia",
+award1:"Pierwsze punkty",award2:"Mistrz quizu",award3:"Mistrz pamięci",
+award4:"Łowca bonusów",award5:"Tysiąc punktów",
+awardDesc1:"Zdobądź co najmniej 10 punktów.",
+awardDesc2:"Odpowiedz na 10 pytań quizowych.",
+awardDesc3:"Ukończ grę pamięciową.",
+awardDesc4:"Odbierz bonus dzienny.",
+awardDesc5:"Zdobądź 1000 punktów.",
+locked:"Do zdobycia",unlocked:"Odblokowano",
+cleared:"Ranking wyczyszczony.",
+questions:[
 ["Ile nóg ma pająk?",["6","8","10"],1],
 ["Jaka jest stolica Francji?",["Berlin","Paryż","Rzym"],1],
 ["Ile planet ma Układ Słoneczny?",["7","8","9"],1],
@@ -204,8 +237,47 @@ pl:[
 ["Jaka jest stolica Niemiec?",["Monachium","Hamburg","Berlin"],2],
 ["Która planeta jest najbliżej Słońca?",["Wenus","Merkury","Mars"],1],
 ["Ile boków ma sześciokąt?",["5","6","8"],1]
-],
-de:[
+]
+},
+de:{
+tagline:"Dein Unterhaltungszentrum",welcomeTitle:"Willkommen bei PLAYBOX! 👋",
+welcomeText:"Spiele, entdecke und sammle jeden Tag Punkte.",
+pointsLabel:"Deine Punkte",levelLabel:"Level",
+bonusTitle:"🎁 Tagesbonus",bonusText:"Hole dir deine täglichen Punkte!",
+bonusDone:"Bonus bereits abgeholt. Komm morgen wieder.",
+challengeTitle:"📅 Tagesaufgabe",challengeText:"Beantworte die heutige Frage richtig.",
+challengeDone:"Aufgabe erledigt! Komm morgen wieder.",
+gamesHeading:"🎮 Spiele entdecken",tileQuiz:"Quiz",tileQuizDesc:"Teste dein Wissen",
+tileMemory:"Gedächtnis",tileMemoryDesc:"Trainiere dein Gehirn",
+tileReflex:"Reflexe",tileReflexDesc:"Teste deine Reaktion",
+tileAwards:"Belohnungen",tileAwardsDesc:"Sammle Erfolge",
+adTitle:"Werbeplatz",adText:"Werbung wird nach Freigabe der Website eingebunden.",
+quizTitle:"🧠 Wissensquiz",next:"Nächste Frage",
+correct:"Super! +10 Punkte ⭐",wrong:"Leider falsch! Versuche es erneut.",
+questionNumber:"Frage",memoryTitle:"🧩 Gedächtnisspiel",
+memoryDescription:"Finde alle gleichen Symbolpaare.",
+memoryStart:"Neues Spiel",memoryStatus:"Gefundene Paare:",
+memoryWin:"Glückwunsch! +20 Punkte ⭐",
+reflexTitle:"⚡ Reaktionstest",reflexDescription:"Klicke, wenn das Signal erscheint!",
+gameStatus:"Drücke START.",start:"START",hit:"⚡ KLICK!",
+wait:"Warte auf das Signal...",ready:"JETZT! KLICK!",
+early:"Zu früh! Versuche es erneut.",
+time:"Deine Zeit: ",ms:" ms! +5 Punkte ⭐",
+awardsTitle:"🏆 Deine Erfolge",rankTitle:"🥇 Lokale Rangliste",
+clearRank:"Rangliste löschen",rankInfo:"Ergebnisse auf diesem Gerät gespeichert.",
+settingsTitle:"⚙️ Einstellungen",languageLabel:"App-Sprache",
+aboutTitle:"ℹ️ Über die App",navHome:"Start",navGames:"Spiele",
+navAwards:"Erfolge",navSettings:"Einstellungen",
+award1:"Erste Punkte",award2:"Quizmeister",award3:"Gedächtnismeister",
+award4:"Bonusjäger",award5:"Tausend Punkte",
+awardDesc1:"Sammle mindestens 10 Punkte.",
+awardDesc2:"Beantworte 10 Quizfragen.",
+awardDesc3:"Schließe das Gedächtnisspiel ab.",
+awardDesc4:"Hole dir den Tagesbonus.",
+awardDesc5:"Sammle 1000 Punkte.",
+locked:"Noch offen",unlocked:"Freigeschaltet",
+cleared:"Rangliste gelöscht.",
+questions:[
 ["Wie viele Beine hat eine Spinne?",["6","8","10"],1],
 ["Was ist die Hauptstadt von Frankreich?",["Berlin","Paris","Rom"],1],
 ["Wie viele Planeten hat unser Sonnensystem?",["7","8","9"],1],
@@ -216,8 +288,47 @@ de:[
 ["Was ist die Hauptstadt von Deutschland?",["München","Hamburg","Berlin"],2],
 ["Welcher Planet ist der Sonne am nächsten?",["Venus","Merkur","Mars"],1],
 ["Wie viele Seiten hat ein Sechseck?",["5","6","8"],1]
-],
-en:[
+]
+},
+en:{
+tagline:"Your entertainment center",welcomeTitle:"Welcome to PLAYBOX! 👋",
+welcomeText:"Play, discover and earn points every day.",
+pointsLabel:"Your points",levelLabel:"Level",
+bonusTitle:"🎁 Daily bonus",bonusText:"Collect your daily points!",
+bonusDone:"Bonus already collected. Come back tomorrow.",
+challengeTitle:"📅 Daily challenge",challengeText:"Answer today's question correctly.",
+challengeDone:"Challenge completed! Come back tomorrow.",
+gamesHeading:"🎮 Discover games",tileQuiz:"Quiz",tileQuizDesc:"Test your knowledge",
+tileMemory:"Memory",tileMemoryDesc:"Train your brain",
+tileReflex:"Reflex",tileReflexDesc:"Test your speed",
+tileAwards:"Rewards",tileAwardsDesc:"Collect achievements",
+adTitle:"Advertisement space",adText:"Ads will be connected after website approval.",
+quizTitle:"🧠 Knowledge quiz",next:"Next question",
+correct:"Well done! +10 points ⭐",wrong:"Not quite! Try again.",
+questionNumber:"Question",memoryTitle:"🧩 Memory game",
+memoryDescription:"Find all matching symbol pairs.",
+memoryStart:"New game",memoryStatus:"Pairs found:",
+memoryWin:"Congratulations! +20 points ⭐",
+reflexTitle:"⚡ Reaction test",reflexDescription:"Click when the signal appears!",
+gameStatus:"Press START.",start:"START",hit:"⚡ CLICK!",
+wait:"Wait for the signal...",ready:"NOW! CLICK!",
+early:"Too early! Try again.",
+time:"Your time: ",ms:" ms! +5 points ⭐",
+awardsTitle:"🏆 Your achievements",rankTitle:"🥇 Local ranking",
+clearRank:"Clear ranking",rankInfo:"Results saved on this device.",
+settingsTitle:"⚙️ Settings",languageLabel:"App language",
+aboutTitle:"ℹ️ About the app",navHome:"Home",navGames:"Games",
+navAwards:"Awards",navSettings:"Settings",
+award1:"First points",award2:"Quiz master",award3:"Memory master",
+award4:"Bonus hunter",award5:"One thousand points",
+awardDesc1:"Earn at least 10 points.",
+awardDesc2:"Answer 10 quiz questions.",
+awardDesc3:"Complete the memory game.",
+awardDesc4:"Collect the daily bonus.",
+awardDesc5:"Earn 1000 points.",
+locked:"Locked",unlocked:"Unlocked",
+cleared:"Ranking cleared.",
+questions:[
 ["How many legs does a spider have?",["6","8","10"],1],
 ["What is the capital of France?",["Berlin","Paris","Rome"],1],
 ["How many planets are in our Solar System?",["7","8","9"],1],
@@ -228,214 +339,213 @@ en:[
 ["What is the capital of Germany?",["Munich","Hamburg","Berlin"],2],
 ["Which planet is closest to the Sun?",["Venus","Mercury","Mars"],1],
 ["How many sides does a hexagon have?",["5","6","8"],1]
-]};
+]
+}
+};
 
 let lang="pl";
-let score=Number(localStorage.getItem("pbScore")||0);
-let qi=0,answered=false;
-let challengeDone=false;
+let score=Number(localStorage.getItem("pb3score")||localStorage.getItem("pbScore")||0);
+let qi=0,answered=false,challengeDone=false;
 let gameTimer=null,gameReady=false,startTime=0;
 let memoryCards=[],memoryOpen=[],memoryPairs=0,memoryLock=false;
 
-function tr(k){return T[lang][k]}
-function dayKey(){return new Date().toISOString().slice(0,10)}
-function getDate(key){return localStorage.getItem(key)===dayKey()}
-function updateScore(){
-document.getElementById("score").textContent=score;
+function t(k){return words[lang][k]}
+function dateKey(){const d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}
+function saveScore(){
+localStorage.setItem("pb3score",score);
 localStorage.setItem("pbScore",score);
+document.getElementById("score").textContent=score+" ⭐";
+document.getElementById("level").textContent=Math.floor(score/100)+1;
+showAchievements();
 }
-function addPoints(n){
-score+=n;updateScore();
+function addPoints(n){score+=n;saveScore()}
+function showPage(id,btn){
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+if(btn)btn.classList.add("active");
+else document.querySelectorAll(".nav button").forEach((b,i)=>b.classList.toggle("active",["home","games","achievements","settings"][i]===id));
+window.scrollTo(0,0);
+if(id==="achievements")showRanking();
 }
 function changeLanguage(){
 lang=document.getElementById("language").value;
+document.getElementById("language2").value=lang;
 document.documentElement.lang=lang;
-const ids={
-subtitle:"subtitle",score:"scoreLabel",bonus:"bonusTitle",
-bonusText:"bonusText",challenge:"challengeTitle",
-challengeText:"challengeText",quiz:"quizTitle",next:"next",
-memory:"memoryTitle",memoryDesc:"memoryDescription",
-memoryStart:"memoryStart",game:"gameTitle",
-gameDesc:"gameDescription",gameStatus:"gameStatus",
-start:"start",hit:"hit",rank:"rankTitle",
-clear:"clearRank",rankInfo:"rankInfo"
-};
-Object.keys(ids).forEach(k=>{
-document.getElementById(ids[k]).textContent=tr(k);
+Object.keys(words[lang]).forEach(k=>{
+const el=document.getElementById(k);
+if(el&&typeof words[lang][k]==="string")el.textContent=words[lang][k];
 });
-showQuestion();
-showChallenge();
-showBonus();
-showRanking();
+showBonus();showChallenge();showQuestion();showRanking();showAchievements();
 }
-
 function showBonus(){
-const done=getDate("pbBonus");
+const done=localStorage.getItem("pb3bonus")===dateKey();
 document.getElementById("bonusButton").disabled=done;
-document.getElementById("bonusButton").textContent=done?tr("bonusDone"):"+"+(20)+" ⭐";
-if(done)document.getElementById("bonusText").textContent=tr("bonusDone");
+document.getElementById("bonusButton").textContent=done?t("bonusDone"):"+20 ⭐";
+document.getElementById("bonusText").textContent=done?t("bonusDone"):t("bonusText");
 }
 function dailyBonus(){
-if(getDate("pbBonus"))return;
-localStorage.setItem("pbBonus",dayKey());
+if(localStorage.getItem("pb3bonus")===dateKey())return;
+localStorage.setItem("pb3bonus",dateKey());
 addPoints(20);showBonus();
 }
 function challengeIndex(){
-let n=0;
-for(let i=0;i<dayKey().length;i++)n+=dayKey().charCodeAt(i);
-return n%Q[lang].length;
+const d=dateKey();let n=0;
+for(let i=0;i<d.length;i++)n+=d.charCodeAt(i);
+return n%words[lang].questions.length;
 }
 function showChallenge(){
-challengeDone=getDate("pbChallenge");
-const q=Q[lang][challengeIndex()];
+challengeDone=localStorage.getItem("pb3challenge")===dateKey();
+const q=words[lang].questions[challengeIndex()];
 document.getElementById("challengeQuestion").textContent=q[0];
-const area=document.getElementById("challengeAnswers");
-area.innerHTML="";
+const area=document.getElementById("challengeAnswers");area.innerHTML="";
 q[1].forEach((a,i)=>{
-let b=document.createElement("button");
-b.className="option";b.textContent=a;
-b.disabled=challengeDone;
+const b=document.createElement("button");b.className="option";
+b.textContent=a;b.disabled=challengeDone;
 b.onclick=()=>{
 if(challengeDone)return;
 challengeDone=true;
-localStorage.setItem("pbChallenge",dayKey());
+localStorage.setItem("pb3challenge",dateKey());
 if(i===q[2]){
 addPoints(15);
-document.getElementById("challengeResult").textContent=tr("correct");
-}else{
-document.getElementById("challengeResult").textContent=tr("wrong");
-}
+document.getElementById("challengeResult").textContent=t("correct");
+}else document.getElementById("challengeResult").textContent=t("wrong");
 showChallenge();
 };
 area.appendChild(b);
 });
-document.getElementById("challengeResult").textContent=challengeDone?tr("challengeDone"):"";
+document.getElementById("challengeResult").textContent=challengeDone?t("challengeDone"):"";
 }
 function showQuestion(){
-const q=Q[lang][qi%Q[lang].length];
+const q=words[lang].questions[qi%words[lang].questions.length];
 document.getElementById("question").textContent=q[0];
 document.getElementById("result").textContent="";
+document.getElementById("questionNumber").textContent=t("questionNumber")+" "+(qi%10+1)+"/10";
 answered=false;
 const area=document.getElementById("answers");area.innerHTML="";
 q[1].forEach((a,i)=>{
-let b=document.createElement("button");
-b.className="option";b.textContent=a;
+const b=document.createElement("button");b.className="option";b.textContent=a;
 b.onclick=()=>{
-if(answered)return;
-answered=true;
+if(answered)return;answered=true;
 area.querySelectorAll("button").forEach(x=>x.disabled=true);
 if(i===q[2]){
 addPoints(10);
-document.getElementById("result").textContent=tr("correct");
-}else document.getElementById("result").textContent=tr("wrong");
+document.getElementById("result").textContent=t("correct");
+let count=Number(localStorage.getItem("pb3correct")||0)+1;
+localStorage.setItem("pb3correct",count);
+}else document.getElementById("result").textContent=t("wrong");
+showAchievements();
 };
 area.appendChild(b);
 });
 }
 function nextQuestion(){qi++;showQuestion()}
-
 function startMemory(){
-memoryCards=["🐱","🐶","🐸","🦊","🐱","🐶","🐸","🦊"];
+memoryCards=["🐱","🐶","🐸","🦊","🐼","🐵","🐱","🐶","🐸","🦊","🐼","🐵"];
 memoryCards.sort(()=>Math.random()-.5);
 memoryOpen=[];memoryPairs=0;memoryLock=false;
+document.getElementById("memoryStatus").textContent=t("memoryStatus")+" 0/6";
 renderMemory();
-document.getElementById("memoryStatus").textContent=tr("memoryStatus")+" 0/4";
 }
 function renderMemory(){
 const board=document.getElementById("memoryBoard");board.innerHTML="";
-memoryCards.forEach((symbol,i)=>{
-let b=document.createElement("button");
-b.textContent=memoryOpen.includes(i)||memoryCards[i]===""?symbol:"❔";
-if(memoryCards[i]==="")b.textContent="✓";
-if(memoryOpen.includes(i))b.className="open";
-b.disabled=memoryCards[i]===""||memoryOpen.includes(i);
-b.onclick=()=>flipMemory(i);
-board.appendChild(b);
+memoryCards.forEach((s,i)=>{
+const b=document.createElement("button");
+b.textContent=s===""?"✓":memoryOpen.includes(i)?s:"❔";
+b.className=memoryOpen.includes(i)?"open":"";
+b.disabled=s===""||memoryOpen.includes(i);
+b.onclick=()=>flipMemory(i);board.appendChild(b);
 });
 }
 function flipMemory(i){
 if(memoryLock||memoryOpen.length===2||memoryCards[i]==="")return;
 memoryOpen.push(i);renderMemory();
 if(memoryOpen.length===2){
-if(memoryCards[memoryOpen[0]]===memoryCards[memoryOpen[1]]){
-memoryCards[memoryOpen[0]]="";
-memoryCards[memoryOpen[1]]="";
-memoryPairs++;memoryOpen=[];
-renderMemory();
-document.getElementById("memoryStatus").textContent=tr("memoryStatus")+" "+memoryPairs+"/4";
-if(memoryPairs===4){
+const [a,b]=memoryOpen;
+if(memoryCards[a]===memoryCards[b]){
+memoryCards[a]="";memoryCards[b]="";
+memoryPairs++;memoryOpen=[];renderMemory();
+document.getElementById("memoryStatus").textContent=t("memoryStatus")+" "+memoryPairs+"/6";
+if(memoryPairs===6){
 addPoints(20);
-document.getElementById("memoryStatus").textContent=tr("memoryWin");
+localStorage.setItem("pb3memory","yes");
+document.getElementById("memoryStatus").textContent=t("memoryWin");
+showAchievements();
 }
 }else{
 memoryLock=true;
-setTimeout(()=>{
-memoryOpen=[];memoryLock=false;renderMemory();
-},800);
+setTimeout(()=>{memoryOpen=[];memoryLock=false;renderMemory()},850);
 }
 }
 }
-
 function startGame(){
-clearTimeout(gameTimer);
-gameReady=false;
+clearTimeout(gameTimer);gameReady=false;
 document.getElementById("hit").disabled=true;
 document.getElementById("start").disabled=true;
-document.getElementById("gameStatus").textContent=tr("wait");
+document.getElementById("gameStatus").textContent=t("wait");
 gameTimer=setTimeout(()=>{
 gameReady=true;startTime=Date.now();
-document.getElementById("gameStatus").textContent=tr("ready");
+document.getElementById("gameStatus").textContent=t("ready");
 document.getElementById("hit").disabled=false;
 },1500+Math.random()*3500);
 }
 function hit(){
 if(!gameReady){
-if(!document.getElementById("start").disabled){
-document.getElementById("gameStatus").textContent=tr("early");
+if(document.getElementById("start").disabled){
+clearTimeout(gameTimer);gameReady=false;
+document.getElementById("start").disabled=false;
+document.getElementById("hit").disabled=true;
+document.getElementById("gameStatus").textContent=t("early");
 }
 return;
 }
-let elapsed=Date.now()-startTime;
-gameReady=false;
+const elapsed=Date.now()-startTime;gameReady=false;
 document.getElementById("hit").disabled=true;
 document.getElementById("start").disabled=false;
 addPoints(5);
-document.getElementById("gameStatus").textContent=tr("time")+elapsed+tr("points");
-saveRanking(elapsed);
-}
-function saveRanking(time){
-let list=JSON.parse(localStorage.getItem("pbRanking")||"[]");
-list.push({score:score,date:dayKey()});
+document.getElementById("gameStatus").textContent=t("time")+elapsed+t("ms");
+let list=JSON.parse(localStorage.getItem("pb3ranking")||"[]");
+list.push({score:score,date:dateKey()});
 list.sort((a,b)=>b.score-a.score);
-localStorage.setItem("pbRanking",JSON.stringify(list.slice(0,5)));
+localStorage.setItem("pb3ranking",JSON.stringify(list.slice(0,5)));
 showRanking();
 }
 function showRanking(){
-let list=JSON.parse(localStorage.getItem("pbRanking")||"[]");
+const list=JSON.parse(localStorage.getItem("pb3ranking")||"[]");
 const ol=document.getElementById("ranking");ol.innerHTML="";
+if(!list.length){const li=document.createElement("li");li.textContent="—";ol.appendChild(li)}
 list.forEach(x=>{
-let li=document.createElement("li");
-li.textContent=x.score+" ⭐ — "+x.date;
-ol.appendChild(li);
+const li=document.createElement("li");
+li.textContent=x.score+" ⭐ — "+x.date;ol.appendChild(li);
 });
-if(!list.length){
-let li=document.createElement("li");
-li.textContent="—";ol.appendChild(li);
-}
 }
 function clearRanking(){
 if(!confirm("Czy na pewno wyczyścić ranking?"))return;
-localStorage.removeItem("pbRanking");
-showRanking();
+localStorage.removeItem("pb3ranking");showRanking();
 }
-
+function showAchievements(){
+const count=Number(localStorage.getItem("pb3correct")||0);
+const done=[
+score>=10,count>=10,
+localStorage.getItem("pb3memory")==="yes",
+localStorage.getItem("pb3bonus")===dateKey(),
+score>=1000
+];
+const names=["award1","award2","award3","award4","award5"];
+const desc=["awardDesc1","awardDesc2","awardDesc3","awardDesc4","awardDesc5"];
+const box=document.getElementById("achievementsList");box.innerHTML="";
+done.forEach((yes,i)=>{
+const div=document.createElement("div");
+div.className="achievement"+(yes?"":" locked");
+const emoji=["⭐","🧠","🧩","🎁","👑"][i];
+div.innerHTML="<span class='emoji'>"+emoji+"</span><div><strong>"+t(names[i])+"</strong><small>"+t(desc[i])+"</small><small>"+(yes?t("unlocked"):t("locked"))+"</small></div>";
+box.appendChild(div);
+});
+}
 document.getElementById("language").value="pl";
-updateScore();
-showBonus();
-showChallenge();
-showQuestion();
-showRanking();
-startMemory();
+document.getElementById("language2").value="pl";
+saveScore();showBonus();showChallenge();showQuestion();
+showRanking();showAchievements();startMemory();
 </script>
 </body>
 </html>
