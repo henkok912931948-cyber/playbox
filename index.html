@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111827">
+<title>FunBox - Graj i odkrywaj</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#111827;color:white;font-family:Arial,sans-serif}
+header{text-align:center;padding:24px 15px;background:#1f2937}
+header h1{margin:0;color:#a78bfa;font-size:30px}
+header p{color:#cbd5e1}
+select,button{padding:12px;border:0;border-radius:12px;font-size:16px}
+select{background:#374151;color:white}
+main{max-width:600px;margin:auto;padding:16px}
+.card{background:#1f2937;padding:20px;margin:15px 0;border-radius:18px}
+.card h2{color:#c4b5fd;margin-top:0}
+button{background:#8b5cf6;color:white;font-weight:bold;cursor:pointer;margin:5px}
+button:hover{background:#7c3aed}
+.option{display:block;width:100%;text-align:left;background:#374151}
+.option:disabled{opacity:.8}
+#result{color:#86efac;font-weight:bold;min-height:25px}
+.score{text-align:center;font-size:19px;color:#fbbf24}
+.ad{border:1px dashed #64748b;padding:18px;text-align:center;color:#94a3b8;border-radius:12px;margin:18px 0;font-size:13px}
+footer{text-align:center;color:#9ca3af;padding:25px}
+</style>
+</head>
+<body>
+
+<header>
+<h1>🎁 FUNBOX</h1>
+<p id="subtitle">Graj, zdobywaj punkty i odkrywaj świat!</p>
+<select id="language" onchange="changeLanguage()">
+<option value="pl">🇵🇱 Polski</option>
+<option value="de">🇩🇪 Deutsch</option>
+<option value="en">🇬🇧 English</option>
+</select>
+</header>
+
+<main>
+<div class="score">
+<span id="scoreLabel">Twoje punkty:</span>
+<span id="score">0</span> ⭐
+</div>
+
+<div class="ad">
+📢 Miejsce na reklamę
+<br>Reklamy zostaną podłączone w kolejnym etapie.
+</div>
+
+<section class="card">
+<h2 id="factTitle">💡 Ciekawostka dnia</h2>
+<p id="fact"></p>
+</section>
+
+<section class="card">
+<h2 id="quizTitle">🧠 Quiz wiedzy</h2>
+<p id="question"></p>
+<div id="answers"></div>
+<p id="result"></p>
+<button onclick="nextQuestion()" id="next">Następne pytanie</button>
+</section>
+
+<section class="card">
+<h2 id="gameTitle">⚡ Test refleksu</h2>
+<p id="gameDescription">Kliknij przycisk jak najszybciej, gdy pojawi się zielony kolor!</p>
+<p id="gameStatus">Naciśnij START, aby rozpocząć.</p>
+<button onclick="startGame()" id="start">START</button>
+<button onclick="hit()" id="hit" disabled>⚡ KLIKNIJ!</button>
+</section>
+
+<div class="ad">
+📢 Miejsce na reklamę
+<br>Wkrótce tutaj pojawią się reklamy.
+</div>
+
+</main>
+
+<footer>
+<p>FUNBOX © 2026</p>
+<p>Graj • Ucz się • Odkrywaj</p>
+</footer>
+
+<script>
+const translations={
+pl:{
+subtitle:"Graj, zdobywaj punkty i odkrywaj świat!",
+score:"Twoje punkty:",
+factTitle:"💡 Ciekawostka dnia",
+quizTitle:"🧠 Quiz wiedzy",
+gameTitle:"⚡ Test refleksu",
+gameDescription:"Kliknij przycisk jak najszybciej, gdy pojawi się zielony kolor!",
+gameStatus:"Naciśnij START, aby rozpocząć.",
+start:"START",hit:"⚡ KLIKNIJ!",
+next:"Następne pytanie",
+correct:"Brawo! Poprawna odpowiedź! +10 punktów ⭐",
+wrong:"Niestety, spróbuj następnym razem!",
+wait:"Czekaj na zielony kolor...",
+ready:"TERAZ! SZYBKO!",
+early:"Za wcześnie! Spróbuj jeszcze raz.",
+time:"Twój czas: ",
+points:" punktów! +5 ⭐",
+facts:["Ośmiornice mają trzy serca.","Miód może przetrwać tysiące lat.","Słońce jest gwiazdą.","Banany są jagodami w sensie botanicznym."],
+questions:[
+["Ile nóg ma pająk?",["6","8","10"],1],
+["Jaka jest stolica Francji?",["Berlin","Paryż","Rzym"],1],
+["Ile planet jest w Układzie Słonecznym?",["7","8","9"],1],
+["Który ocean jest największy?",["Atlantycki","Indyjski","Spokojny"],2],
+["Jaki jest symbol chemiczny złota?",["Ag","Au","Fe"],1]
+]
+},
+de:{
+subtitle:"Spiele, sammle Punkte und entdecke die Welt!",
+score:"Deine Punkte:",
+factTitle:"💡 Fakt des Tages",
+quizTitle:"🧠 Wissensquiz",
+gameTitle:"⚡ Reaktionstest",
+gameDescription:"Klicke so schnell wie möglich, wenn die grüne Farbe erscheint!",
+gameStatus:"Drücke START zum Beginnen.",
+start:"START",hit:"⚡ KLICK!",
+next:"Nächste Frage",
+correct:"Super! Richtige Antwort! +10 Punkte ⭐",
+wrong:"Leider falsch! Versuche es noch einmal!",
+wait:"Warte auf die grüne Farbe...",
+ready:"JETZT! SCHNELL!",
+early:"Zu früh! Versuche es noch einmal.",
+time:"Deine Zeit: ",
+points:" Punkte! +5 ⭐",
+facts:["Oktopusse haben drei Herzen.","Honig kann Tausende Jahre halten.","Die Sonne ist ein Stern.","Bananen sind botanisch gesehen Beeren."],
+questions:[
+["Wie viele Beine hat eine Spinne?",["6","8","10"],1],
+["Was ist die Hauptstadt von Frankreich?",["Berlin","Paris","Rom"],1],
+["Wie viele Planeten hat unser Sonnensystem?",["7","8","9"],1],
+["Welcher Ozean ist der größte?",["Atlantik","Indischer Ozean","Pazifik"],2],
+["Was ist das chemische Symbol für Gold?",["Ag","Au","Fe"],1]
+]
+},
+en:{
+subtitle:"Play, earn points and discover the world!",
+score:"Your points:",
+factTitle:"💡 Fact of the day",
+quizTitle:"🧠 Knowledge quiz",
+gameTitle:"⚡ Reaction test",
+gameDescription:"Click as fast as possible when the green color appears!",
+gameStatus:"Press START to begin.",
+start:"START",hit:"⚡ CLICK!",
+next:"Next question",
+correct:"Well done! Correct answer! +10 points ⭐",
+wrong:"Not quite! Try again next time!",
+wait:"Wait for the green color...",
+ready:"NOW! QUICK!",
+early:"Too early! Try again.",
+time:"Your time: ",
+points:" points! +5 ⭐",
+facts:["Octopuses have three hearts.","Honey can last thousands of years.","The Sun is a star.","Bananas are botanically berries."],
+questions:[
+["How many legs does a spider have?",["6","8","10"],1],
+["What is the capital of France?",["Berlin","Paris","Rome"],1],
+["How many planets are in our Solar System?",["7","8","9"],1],
+["Which is the largest ocean?",["Atlantic","Indian","Pacific"],2],
+["What is the chemical symbol for gold?",["Ag","Au","Fe"],1]
+]
+}
+};
+
+let lang="pl";
+let score=Number(localStorage.getItem("funboxScore")||0);
+let questionIndex=0;
+let answered=false;
+let gameTimer=null;
+let startTime=0;
+let gameReady=false;
+
+function updateScore(){
+document.getElementById("score").textContent=score;
+localStorage.setItem("funboxScore",score);
+}
+
+function changeLanguage(){
+lang=document.getElementById("language").value;
+const t=translations[lang];
+document.getElementById("subtitle").textContent=t.subtitle;
+document.getElementById("scoreLabel").textContent=t.score;
+document.getElementById("factTitle").textContent=t.factTitle;
+document.getElementById("quizTitle").textContent=t.quizTitle;
+document.getElementById("gameTitle").textContent=t.gameTitle;
+document.getElementById("gameDescription").textContent=t.gameDescription;
+document.getElementById("gameStatus").textContent=t.gameStatus;
+document.getElementById("start").textContent=t.start;
+document.getElementById("hit").textContent=t.hit;
+document.getElementById("next").textContent=t.next;
+showFact();
+showQuestion();
+}
+
+function showFact(){
+const facts=translations[lang].facts;
+const day=Math.floor(Date.now()/86400000);
+document.getElementById("fact").textContent=facts[day%facts.length];
+}
+
+function showQuestion(){
+const t=translations[lang];
+const q=t.questions[questionIndex%t.questions.length];
+document.getElementById("question").textContent=q[0];
+document.getElementById("result").textContent="";
+answered=false;
+const area=document.getElementById("answers");
+area.innerHTML="";
+q[1].forEach((answer,i)=>{
+const b=document.createElement("button");
+b.className="option";
+b.textContent=answer;
+b.onclick=()=>checkAnswer(i);
+area.appendChild(b);
+});
+}
+
+function checkAnswer(choice){
+if(answered)return;
+answered=true;
+const q=translations[lang].questions[questionIndex%translations[lang].questions.length];
+const buttons=document.querySelectorAll(".option");
+buttons.forEach(b=>b.disabled=true);
+if(choice===q[2]){
+score+=10;
+updateScore();
+document.getElementById("result").textContent=translations[lang].correct;
+}else{
+document.getElementById("result").textContent=translations[lang].wrong;
+}
+}
+
+function nextQuestion(){
+questionIndex++;
+showQuestion();
+}
+
+function startGame(){
+clearTimeout(gameTimer);
+gameReady=false;
+document.getElementById("hit").disabled=true;
+document.getElementById("gameStatus").textContent=translations[lang].wait;
+document.getElementById("start").disabled=true;
+gameTimer=setTimeout(()=>{
+gameReady=true;
+startTime=Date.now();
+document.getElementById("gameStatus").textContent=translations[lang].ready;
+document.getElementById("hit").disabled=false;
+},1500+Math.random()*3500);
+}
+
+function hit(){
+if(!gameReady)return;
+const elapsed=Date.now()-startTime;
+gameReady=false;
+document.getElementById("hit").disabled=true;
+document.getElementById("start").disabled=false;
+score+=5;
+updateScore();
+document.getElementById("gameStatus").textContent=
+translations[lang].time+elapsed+" ms! "+translations[lang].points;
+}
+
+document.getElementById("language").value="pl";
+updateScore();
+showFact();
+showQuestion();
+</script>
+</body>
+</html>
