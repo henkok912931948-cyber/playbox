@@ -3,34 +3,39 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#111827">
-<title>FunBox - Graj i odkrywaj</title>
+<title>PLAYBOX 2.0</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#111827;color:white;font-family:Arial,sans-serif}
-header{text-align:center;padding:24px 15px;background:#1f2937}
-header h1{margin:0;color:#a78bfa;font-size:30px}
+header{text-align:center;padding:25px 12px;background:#1f2937}
+h1{color:#a78bfa;font-size:34px;margin:5px}
 header p{color:#cbd5e1}
-select,button{padding:12px;border:0;border-radius:12px;font-size:16px}
+select,button{padding:12px;border:0;border-radius:12px;font-size:15px}
 select{background:#374151;color:white}
-main{max-width:600px;margin:auto;padding:16px}
-.card{background:#1f2937;padding:20px;margin:15px 0;border-radius:18px}
-.card h2{color:#c4b5fd;margin-top:0}
-button{background:#8b5cf6;color:white;font-weight:bold;cursor:pointer;margin:5px}
-button:hover{background:#7c3aed}
-.option{display:block;width:100%;text-align:left;background:#374151}
-.option:disabled{opacity:.8}
-#result{color:#86efac;font-weight:bold;min-height:25px}
-.score{text-align:center;font-size:19px;color:#fbbf24}
-.ad{border:1px dashed #64748b;padding:18px;text-align:center;color:#94a3b8;border-radius:12px;margin:18px 0;font-size:13px}
+main{max-width:650px;margin:auto;padding:15px}
+.card{background:#1f2937;padding:20px;border-radius:18px;margin:16px 0}
+h2{color:#c4b5fd;margin-top:0}
+button{background:#8b5cf6;color:white;font-weight:bold;margin:4px;cursor:pointer}
+button:disabled{opacity:.5}
+button:active{transform:scale(.97)}
+.option{display:block;width:100%;text-align:left;background:#374151;margin:9px 0}
+.option:disabled{opacity:1}
+.score{text-align:center;color:#fbbf24;font-size:22px;padding:15px}
+.result{color:#86efac;min-height:25px;font-weight:bold}
+.ad{border:1px dashed #64748b;padding:20px;text-align:center;color:#9ca3af;border-radius:12px;margin:18px 0}
+.memory{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.memory button{font-size:27px;padding:15px 2px;min-height:65px;background:#374151}
+.memory button.open{background:#6d28d9}
+.small{color:#9ca3af;font-size:13px}
 footer{text-align:center;color:#9ca3af;padding:25px}
 </style>
 </head>
 <body>
 
 <header>
-<h1>🎁 FUNBOX</h1>
+<h1>🎁 PLAYBOX</h1>
 <p id="subtitle">Graj, zdobywaj punkty i odkrywaj świat!</p>
 <select id="language" onchange="changeLanguage()">
 <option value="pl">🇵🇱 Polski</option>
@@ -42,232 +47,395 @@ footer{text-align:center;color:#9ca3af;padding:25px}
 <main>
 <div class="score">
 <span id="scoreLabel">Twoje punkty:</span>
-<span id="score">0</span> ⭐
-</div>
-
-<div class="ad">
-📢 Miejsce na reklamę
-<br>Reklamy zostaną podłączone w kolejnym etapie.
+<strong id="score">0</strong> ⭐
 </div>
 
 <section class="card">
-<h2 id="factTitle">💡 Ciekawostka dnia</h2>
-<p id="fact"></p>
+<h2 id="bonusTitle">🎁 Bonus dzienny</h2>
+<p id="bonusText">Odbierz swoje codzienne punkty!</p>
+<button id="bonusButton" onclick="dailyBonus()">Odbierz +20 ⭐</button>
 </section>
+
+<section class="card">
+<h2 id="challengeTitle">📅 Codzienne wyzwanie</h2>
+<p id="challengeText">Odpowiedz poprawnie na jedno pytanie dnia!</p>
+<p id="challengeQuestion"></p>
+<div id="challengeAnswers"></div>
+<p class="result" id="challengeResult"></p>
+</section>
+
+<div class="ad">
+📢 Miejsce na reklamę
+<br>Reklamy zostaną podłączone po przygotowaniu aplikacji.
+</div>
 
 <section class="card">
 <h2 id="quizTitle">🧠 Quiz wiedzy</h2>
 <p id="question"></p>
 <div id="answers"></div>
-<p id="result"></p>
+<p class="result" id="result"></p>
 <button onclick="nextQuestion()" id="next">Następne pytanie</button>
 </section>
 
 <section class="card">
+<h2 id="memoryTitle">🧩 Gra pamięciowa</h2>
+<p id="memoryDescription">Znajdź wszystkie pary takich samych symboli.</p>
+<div class="memory" id="memoryBoard"></div>
+<p id="memoryStatus" class="result"></p>
+<button onclick="startMemory()" id="memoryStart">Nowa gra</button>
+</section>
+
+<section class="card">
 <h2 id="gameTitle">⚡ Test refleksu</h2>
-<p id="gameDescription">Kliknij przycisk jak najszybciej, gdy pojawi się zielony kolor!</p>
-<p id="gameStatus">Naciśnij START, aby rozpocząć.</p>
+<p id="gameDescription">Kliknij szybko, gdy pojawi się sygnał!</p>
+<p id="gameStatus">Naciśnij START.</p>
 <button onclick="startGame()" id="start">START</button>
 <button onclick="hit()" id="hit" disabled>⚡ KLIKNIJ!</button>
 </section>
 
+<section class="card">
+<h2 id="rankTitle">🏆 Twoje najlepsze wyniki</h2>
+<ol id="ranking"></ol>
+<button onclick="clearRanking()" id="clearRank">Wyczyść ranking</button>
+<p class="small" id="rankInfo">Ranking zapisany na tym urządzeniu.</p>
+</section>
+
 <div class="ad">
 📢 Miejsce na reklamę
-<br>Wkrótce tutaj pojawią się reklamy.
+<br>Reklamy zostaną podłączone w kolejnym etapie.
 </div>
-
 </main>
 
-<footer>
-<p>FUNBOX © 2026</p>
-<p>Graj • Ucz się • Odkrywaj</p>
-</footer>
+<footer>PLAYBOX © 2026 · Graj · Ucz się · Odkrywaj</footer>
 
 <script>
-const translations={
+const T={
 pl:{
 subtitle:"Graj, zdobywaj punkty i odkrywaj świat!",
-score:"Twoje punkty:",
-factTitle:"💡 Ciekawostka dnia",
-quizTitle:"🧠 Quiz wiedzy",
-gameTitle:"⚡ Test refleksu",
-gameDescription:"Kliknij przycisk jak najszybciej, gdy pojawi się zielony kolor!",
-gameStatus:"Naciśnij START, aby rozpocząć.",
-start:"START",hit:"⚡ KLIKNIJ!",
-next:"Następne pytanie",
-correct:"Brawo! Poprawna odpowiedź! +10 punktów ⭐",
-wrong:"Niestety, spróbuj następnym razem!",
-wait:"Czekaj na zielony kolor...",
-ready:"TERAZ! SZYBKO!",
-early:"Za wcześnie! Spróbuj jeszcze raz.",
+score:"Twoje punkty:",bonus:"🎁 Bonus dzienny",
+bonusText:"Odbierz swoje codzienne punkty!",
+bonusDone:"Bonus już odebrany! Wróć jutro.",
+challenge:"📅 Codzienne wyzwanie",
+challengeText:"Odpowiedz poprawnie na jedno pytanie dnia!",
+challengeDone:"Wyzwanie wykonane! Wróć jutro.",
+quiz:"🧠 Quiz wiedzy",next:"Następne pytanie",
+correct:"Brawo! +10 punktów ⭐",wrong:"Niestety, spróbuj ponownie!",
+memory:"🧩 Gra pamięciowa",
+memoryDesc:"Znajdź wszystkie pary takich samych symboli.",
+memoryStart:"Nowa gra",memoryWin:"Gratulacje! +20 punktów ⭐",
+memoryStatus:"Znalezione pary:",
+game:"⚡ Test refleksu",
+gameDesc:"Kliknij szybko, gdy pojawi się sygnał!",
+gameStatus:"Naciśnij START.",start:"START",
+hit:"⚡ KLIKNIJ!",wait:"Czekaj na sygnał...",
+ready:"TERAZ! KLIKNIJ!",
+early:"Za wcześnie! Spróbuj ponownie.",
 time:"Twój czas: ",
-points:" punktów! +5 ⭐",
-facts:["Ośmiornice mają trzy serca.","Miód może przetrwać tysiące lat.","Słońce jest gwiazdą.","Banany są jagodami w sensie botanicznym."],
-questions:[
-["Ile nóg ma pająk?",["6","8","10"],1],
-["Jaka jest stolica Francji?",["Berlin","Paryż","Rzym"],1],
-["Ile planet jest w Układzie Słonecznym?",["7","8","9"],1],
-["Który ocean jest największy?",["Atlantycki","Indyjski","Spokojny"],2],
-["Jaki jest symbol chemiczny złota?",["Ag","Au","Fe"],1]
-]
+points:" ms! +5 punktów ⭐",
+rank:"🏆 Twoje najlepsze wyniki",
+clear:"Wyczyść ranking",
+rankInfo:"Ranking zapisany na tym urządzeniu.",
+cleared:"Ranking wyczyszczony."
 },
 de:{
 subtitle:"Spiele, sammle Punkte und entdecke die Welt!",
-score:"Deine Punkte:",
-factTitle:"💡 Fakt des Tages",
-quizTitle:"🧠 Wissensquiz",
-gameTitle:"⚡ Reaktionstest",
-gameDescription:"Klicke so schnell wie möglich, wenn die grüne Farbe erscheint!",
-gameStatus:"Drücke START zum Beginnen.",
-start:"START",hit:"⚡ KLICK!",
-next:"Nächste Frage",
-correct:"Super! Richtige Antwort! +10 Punkte ⭐",
-wrong:"Leider falsch! Versuche es noch einmal!",
-wait:"Warte auf die grüne Farbe...",
-ready:"JETZT! SCHNELL!",
-early:"Zu früh! Versuche es noch einmal.",
+score:"Deine Punkte:",bonus:"🎁 Tagesbonus",
+bonusText:"Hole dir deine täglichen Punkte!",
+bonusDone:"Bonus bereits abgeholt! Komm morgen wieder.",
+challenge:"📅 Tagesaufgabe",
+challengeText:"Beantworte die heutige Frage richtig!",
+challengeDone:"Aufgabe erledigt! Komm morgen wieder.",
+quiz:"🧠 Wissensquiz",next:"Nächste Frage",
+correct:"Super! +10 Punkte ⭐",wrong:"Leider falsch! Versuche es erneut!",
+memory:"🧩 Gedächtnisspiel",
+memoryDesc:"Finde alle Paare mit gleichen Symbolen.",
+memoryStart:"Neues Spiel",memoryWin:"Glückwunsch! +20 Punkte ⭐",
+memoryStatus:"Gefundene Paare:",
+game:"⚡ Reaktionstest",
+gameDesc:"Klicke schnell, wenn das Signal erscheint!",
+gameStatus:"Drücke START.",start:"START",
+hit:"⚡ KLICK!",wait:"Warte auf das Signal...",
+ready:"JETZT! KLICK!",
+early:"Zu früh! Versuche es erneut.",
 time:"Deine Zeit: ",
-points:" Punkte! +5 ⭐",
-facts:["Oktopusse haben drei Herzen.","Honig kann Tausende Jahre halten.","Die Sonne ist ein Stern.","Bananen sind botanisch gesehen Beeren."],
-questions:[
+points:" ms! +5 Punkte ⭐",
+rank:"🏆 Deine besten Ergebnisse",
+clear:"Rangliste löschen",
+rankInfo:"Rangliste auf diesem Gerät gespeichert.",
+cleared:"Rangliste gelöscht."
+},
+en:{
+subtitle:"Play, earn points and discover the world!",
+score:"Your points:",bonus:"🎁 Daily bonus",
+bonusText:"Collect your daily points!",
+bonusDone:"Bonus already collected! Come back tomorrow.",
+challenge:"📅 Daily challenge",
+challengeText:"Answer today's question correctly!",
+challengeDone:"Challenge completed! Come back tomorrow.",
+quiz:"🧠 Knowledge quiz",next:"Next question",
+correct:"Well done! +10 points ⭐",wrong:"Not quite! Try again!",
+memory:"🧩 Memory game",
+memoryDesc:"Find all matching symbol pairs.",
+memoryStart:"New game",memoryWin:"Congratulations! +20 points ⭐",
+memoryStatus:"Pairs found:",
+game:"⚡ Reaction test",
+gameDesc:"Click quickly when the signal appears!",
+gameStatus:"Press START.",start:"START",
+hit:"⚡ CLICK!",wait:"Wait for the signal...",
+ready:"NOW! CLICK!",
+early:"Too early! Try again.",
+time:"Your time: ",
+points:" ms! +5 points ⭐",
+rank:"🏆 Your best scores",
+clear:"Clear ranking",
+rankInfo:"Ranking saved on this device.",
+cleared:"Ranking cleared."
+}};
+
+const Q={
+pl:[
+["Ile nóg ma pająk?",["6","8","10"],1],
+["Jaka jest stolica Francji?",["Berlin","Paryż","Rzym"],1],
+["Ile planet ma Układ Słoneczny?",["7","8","9"],1],
+["Jaki ocean jest największy?",["Atlantycki","Indyjski","Spokojny"],2],
+["Jaki jest symbol złota?",["Ag","Au","Fe"],1],
+["Które zwierzę jest największe?",["Słoń","Płetwal błękitny","Żyrafa"],1],
+["Ile minut ma godzina?",["50","60","100"],1],
+["Jaka jest stolica Niemiec?",["Monachium","Hamburg","Berlin"],2],
+["Która planeta jest najbliżej Słońca?",["Wenus","Merkury","Mars"],1],
+["Ile boków ma sześciokąt?",["5","6","8"],1]
+],
+de:[
 ["Wie viele Beine hat eine Spinne?",["6","8","10"],1],
 ["Was ist die Hauptstadt von Frankreich?",["Berlin","Paris","Rom"],1],
 ["Wie viele Planeten hat unser Sonnensystem?",["7","8","9"],1],
 ["Welcher Ozean ist der größte?",["Atlantik","Indischer Ozean","Pazifik"],2],
-["Was ist das chemische Symbol für Gold?",["Ag","Au","Fe"],1]
-]
-},
-en:{
-subtitle:"Play, earn points and discover the world!",
-score:"Your points:",
-factTitle:"💡 Fact of the day",
-quizTitle:"🧠 Knowledge quiz",
-gameTitle:"⚡ Reaction test",
-gameDescription:"Click as fast as possible when the green color appears!",
-gameStatus:"Press START to begin.",
-start:"START",hit:"⚡ CLICK!",
-next:"Next question",
-correct:"Well done! Correct answer! +10 points ⭐",
-wrong:"Not quite! Try again next time!",
-wait:"Wait for the green color...",
-ready:"NOW! QUICK!",
-early:"Too early! Try again.",
-time:"Your time: ",
-points:" points! +5 ⭐",
-facts:["Octopuses have three hearts.","Honey can last thousands of years.","The Sun is a star.","Bananas are botanically berries."],
-questions:[
+["Was ist das chemische Symbol für Gold?",["Ag","Au","Fe"],1],
+["Welches Tier ist das größte?",["Elefant","Blauwal","Giraffe"],1],
+["Wie viele Minuten hat eine Stunde?",["50","60","100"],1],
+["Was ist die Hauptstadt von Deutschland?",["München","Hamburg","Berlin"],2],
+["Welcher Planet ist der Sonne am nächsten?",["Venus","Merkur","Mars"],1],
+["Wie viele Seiten hat ein Sechseck?",["5","6","8"],1]
+],
+en:[
 ["How many legs does a spider have?",["6","8","10"],1],
 ["What is the capital of France?",["Berlin","Paris","Rome"],1],
 ["How many planets are in our Solar System?",["7","8","9"],1],
-["Which is the largest ocean?",["Atlantic","Indian","Pacific"],2],
-["What is the chemical symbol for gold?",["Ag","Au","Fe"],1]
-]
-}
-};
+["Which ocean is the largest?",["Atlantic","Indian","Pacific"],2],
+["What is the chemical symbol for gold?",["Ag","Au","Fe"],1],
+["Which animal is the largest?",["Elephant","Blue whale","Giraffe"],1],
+["How many minutes are in an hour?",["50","60","100"],1],
+["What is the capital of Germany?",["Munich","Hamburg","Berlin"],2],
+["Which planet is closest to the Sun?",["Venus","Mercury","Mars"],1],
+["How many sides does a hexagon have?",["5","6","8"],1]
+]};
 
 let lang="pl";
-let score=Number(localStorage.getItem("funboxScore")||0);
-let questionIndex=0;
-let answered=false;
-let gameTimer=null;
-let startTime=0;
-let gameReady=false;
+let score=Number(localStorage.getItem("pbScore")||0);
+let qi=0,answered=false;
+let challengeDone=false;
+let gameTimer=null,gameReady=false,startTime=0;
+let memoryCards=[],memoryOpen=[],memoryPairs=0,memoryLock=false;
 
+function tr(k){return T[lang][k]}
+function dayKey(){return new Date().toISOString().slice(0,10)}
+function getDate(key){return localStorage.getItem(key)===dayKey()}
 function updateScore(){
 document.getElementById("score").textContent=score;
-localStorage.setItem("funboxScore",score);
+localStorage.setItem("pbScore",score);
 }
-
+function addPoints(n){
+score+=n;updateScore();
+}
 function changeLanguage(){
 lang=document.getElementById("language").value;
-const t=translations[lang];
-document.getElementById("subtitle").textContent=t.subtitle;
-document.getElementById("scoreLabel").textContent=t.score;
-document.getElementById("factTitle").textContent=t.factTitle;
-document.getElementById("quizTitle").textContent=t.quizTitle;
-document.getElementById("gameTitle").textContent=t.gameTitle;
-document.getElementById("gameDescription").textContent=t.gameDescription;
-document.getElementById("gameStatus").textContent=t.gameStatus;
-document.getElementById("start").textContent=t.start;
-document.getElementById("hit").textContent=t.hit;
-document.getElementById("next").textContent=t.next;
-showFact();
+document.documentElement.lang=lang;
+const ids={
+subtitle:"subtitle",score:"scoreLabel",bonus:"bonusTitle",
+bonusText:"bonusText",challenge:"challengeTitle",
+challengeText:"challengeText",quiz:"quizTitle",next:"next",
+memory:"memoryTitle",memoryDesc:"memoryDescription",
+memoryStart:"memoryStart",game:"gameTitle",
+gameDesc:"gameDescription",gameStatus:"gameStatus",
+start:"start",hit:"hit",rank:"rankTitle",
+clear:"clearRank",rankInfo:"rankInfo"
+};
+Object.keys(ids).forEach(k=>{
+document.getElementById(ids[k]).textContent=tr(k);
+});
 showQuestion();
+showChallenge();
+showBonus();
+showRanking();
 }
 
-function showFact(){
-const facts=translations[lang].facts;
-const day=Math.floor(Date.now()/86400000);
-document.getElementById("fact").textContent=facts[day%facts.length];
+function showBonus(){
+const done=getDate("pbBonus");
+document.getElementById("bonusButton").disabled=done;
+document.getElementById("bonusButton").textContent=done?tr("bonusDone"):"+"+(20)+" ⭐";
+if(done)document.getElementById("bonusText").textContent=tr("bonusDone");
 }
-
+function dailyBonus(){
+if(getDate("pbBonus"))return;
+localStorage.setItem("pbBonus",dayKey());
+addPoints(20);showBonus();
+}
+function challengeIndex(){
+let n=0;
+for(let i=0;i<dayKey().length;i++)n+=dayKey().charCodeAt(i);
+return n%Q[lang].length;
+}
+function showChallenge(){
+challengeDone=getDate("pbChallenge");
+const q=Q[lang][challengeIndex()];
+document.getElementById("challengeQuestion").textContent=q[0];
+const area=document.getElementById("challengeAnswers");
+area.innerHTML="";
+q[1].forEach((a,i)=>{
+let b=document.createElement("button");
+b.className="option";b.textContent=a;
+b.disabled=challengeDone;
+b.onclick=()=>{
+if(challengeDone)return;
+challengeDone=true;
+localStorage.setItem("pbChallenge",dayKey());
+if(i===q[2]){
+addPoints(15);
+document.getElementById("challengeResult").textContent=tr("correct");
+}else{
+document.getElementById("challengeResult").textContent=tr("wrong");
+}
+showChallenge();
+};
+area.appendChild(b);
+});
+document.getElementById("challengeResult").textContent=challengeDone?tr("challengeDone"):"";
+}
 function showQuestion(){
-const t=translations[lang];
-const q=t.questions[questionIndex%t.questions.length];
+const q=Q[lang][qi%Q[lang].length];
 document.getElementById("question").textContent=q[0];
 document.getElementById("result").textContent="";
 answered=false;
-const area=document.getElementById("answers");
-area.innerHTML="";
-q[1].forEach((answer,i)=>{
-const b=document.createElement("button");
-b.className="option";
-b.textContent=answer;
-b.onclick=()=>checkAnswer(i);
+const area=document.getElementById("answers");area.innerHTML="";
+q[1].forEach((a,i)=>{
+let b=document.createElement("button");
+b.className="option";b.textContent=a;
+b.onclick=()=>{
+if(answered)return;
+answered=true;
+area.querySelectorAll("button").forEach(x=>x.disabled=true);
+if(i===q[2]){
+addPoints(10);
+document.getElementById("result").textContent=tr("correct");
+}else document.getElementById("result").textContent=tr("wrong");
+};
 area.appendChild(b);
 });
 }
+function nextQuestion(){qi++;showQuestion()}
 
-function checkAnswer(choice){
-if(answered)return;
-answered=true;
-const q=translations[lang].questions[questionIndex%translations[lang].questions.length];
-const buttons=document.querySelectorAll(".option");
-buttons.forEach(b=>b.disabled=true);
-if(choice===q[2]){
-score+=10;
-updateScore();
-document.getElementById("result").textContent=translations[lang].correct;
+function startMemory(){
+memoryCards=["🐱","🐶","🐸","🦊","🐱","🐶","🐸","🦊"];
+memoryCards.sort(()=>Math.random()-.5);
+memoryOpen=[];memoryPairs=0;memoryLock=false;
+renderMemory();
+document.getElementById("memoryStatus").textContent=tr("memoryStatus")+" 0/4";
+}
+function renderMemory(){
+const board=document.getElementById("memoryBoard");board.innerHTML="";
+memoryCards.forEach((symbol,i)=>{
+let b=document.createElement("button");
+b.textContent=memoryOpen.includes(i)||memoryCards[i]===""?symbol:"❔";
+if(memoryCards[i]==="")b.textContent="✓";
+if(memoryOpen.includes(i))b.className="open";
+b.disabled=memoryCards[i]===""||memoryOpen.includes(i);
+b.onclick=()=>flipMemory(i);
+board.appendChild(b);
+});
+}
+function flipMemory(i){
+if(memoryLock||memoryOpen.length===2||memoryCards[i]==="")return;
+memoryOpen.push(i);renderMemory();
+if(memoryOpen.length===2){
+if(memoryCards[memoryOpen[0]]===memoryCards[memoryOpen[1]]){
+memoryCards[memoryOpen[0]]="";
+memoryCards[memoryOpen[1]]="";
+memoryPairs++;memoryOpen=[];
+renderMemory();
+document.getElementById("memoryStatus").textContent=tr("memoryStatus")+" "+memoryPairs+"/4";
+if(memoryPairs===4){
+addPoints(20);
+document.getElementById("memoryStatus").textContent=tr("memoryWin");
+}
 }else{
-document.getElementById("result").textContent=translations[lang].wrong;
+memoryLock=true;
+setTimeout(()=>{
+memoryOpen=[];memoryLock=false;renderMemory();
+},800);
 }
 }
-
-function nextQuestion(){
-questionIndex++;
-showQuestion();
 }
 
 function startGame(){
 clearTimeout(gameTimer);
 gameReady=false;
 document.getElementById("hit").disabled=true;
-document.getElementById("gameStatus").textContent=translations[lang].wait;
 document.getElementById("start").disabled=true;
+document.getElementById("gameStatus").textContent=tr("wait");
 gameTimer=setTimeout(()=>{
-gameReady=true;
-startTime=Date.now();
-document.getElementById("gameStatus").textContent=translations[lang].ready;
+gameReady=true;startTime=Date.now();
+document.getElementById("gameStatus").textContent=tr("ready");
 document.getElementById("hit").disabled=false;
 },1500+Math.random()*3500);
 }
-
 function hit(){
-if(!gameReady)return;
-const elapsed=Date.now()-startTime;
+if(!gameReady){
+if(!document.getElementById("start").disabled){
+document.getElementById("gameStatus").textContent=tr("early");
+}
+return;
+}
+let elapsed=Date.now()-startTime;
 gameReady=false;
 document.getElementById("hit").disabled=true;
 document.getElementById("start").disabled=false;
-score+=5;
-updateScore();
-document.getElementById("gameStatus").textContent=
-translations[lang].time+elapsed+" ms! "+translations[lang].points;
+addPoints(5);
+document.getElementById("gameStatus").textContent=tr("time")+elapsed+tr("points");
+saveRanking(elapsed);
+}
+function saveRanking(time){
+let list=JSON.parse(localStorage.getItem("pbRanking")||"[]");
+list.push({score:score,date:dayKey()});
+list.sort((a,b)=>b.score-a.score);
+localStorage.setItem("pbRanking",JSON.stringify(list.slice(0,5)));
+showRanking();
+}
+function showRanking(){
+let list=JSON.parse(localStorage.getItem("pbRanking")||"[]");
+const ol=document.getElementById("ranking");ol.innerHTML="";
+list.forEach(x=>{
+let li=document.createElement("li");
+li.textContent=x.score+" ⭐ — "+x.date;
+ol.appendChild(li);
+});
+if(!list.length){
+let li=document.createElement("li");
+li.textContent="—";ol.appendChild(li);
+}
+}
+function clearRanking(){
+if(!confirm("Czy na pewno wyczyścić ranking?"))return;
+localStorage.removeItem("pbRanking");
+showRanking();
 }
 
 document.getElementById("language").value="pl";
 updateScore();
-showFact();
+showBonus();
+showChallenge();
 showQuestion();
+showRanking();
+startMemory();
 </script>
 </body>
 </html>
